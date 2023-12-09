@@ -29,6 +29,8 @@
         :textConfirmBtn="textConfirmBtnModal"
         :dataStocks="dataStocks"
         :dataGoods="dataGoods"
+        :dataReqsImport="dataReqsImport"
+        :impReqGoodInf="impReqGoodInf"
       />
     </div>
   </div>
@@ -56,6 +58,31 @@ export default {
       dataStocks: ["Озон", "WB", "Озон5"],
       dataGoods: ["Мячик", "Наушники", "Ноутбук", "четоеще"],
       idElement: "",
+      dataReqsImport: [
+        {
+          ID: "ID-example-854",
+          status: "Создана",
+          author: "ИП Иванов Иван Иванович",
+          stock: "Склад",
+          date: "02.12.2023 12:45:34",
+          sum: "1000",
+        },
+      ],
+      impReqGoodInf: [
+        {
+          ID: "ID-example-856",
+          name: "Наушники Samsung",
+          quantity: "100",
+          cost: "899",
+        },
+        {
+          ID: "ID-example-857",
+          name: "Наушники Samsung 2",
+          quantity: "19",
+          cost: "1899",
+        },
+      ],
+      filterdDataReqsImport: [],
     };
   },
   components: {
@@ -85,6 +112,11 @@ export default {
           this.titleTextModal = "Создание заявки";
           break;
         case "openImpReq":
+          this.filterdDataReqsImport = this.dataReqsImport.filter(
+            (el) => el.ID == this.idElement
+          );
+
+          //get user goods by id req
           this.titleTextModal = "Просмотр заявки на загрузку";
           break;
       }

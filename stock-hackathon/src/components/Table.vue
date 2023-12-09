@@ -29,7 +29,7 @@
           <button
             class="del-btn"
             v-if="typeTable == 'simple'"
-            @click="openModal('openImpReq')"
+            @click="openModal('openImpReq_' + el.id)"
           >
             <img src="../assets/open_icon.svg" alt="del" />
           </button>

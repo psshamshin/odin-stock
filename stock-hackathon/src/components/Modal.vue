@@ -220,6 +220,67 @@
       </div>
       <!------ END Block for add and edit goods modal fields ------>
 
+      <!------ Block for info  ------>
+      <div v-if="typeModal == 'openImpReq'">
+        <div class="modal-content__el">
+          <div class="modal-row">
+            <div class="modal-column">
+              <label>Тип заявки</label>
+              <div class="modal-column_text">Заявка на прием груза складом</div>
+            </div>
+
+            <div class="modal-column">
+              <label>Продавец</label>
+              <div class="modal-column_text">
+                {{ dataReqsImport[0].author }}
+              </div>
+            </div>
+
+            <div class="modal-column">
+              <label>Статус</label>
+              <div class="modal-column_text">
+                {{ dataReqsImport[0].status }}
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-row last">
+            <div class="modal-column">
+              <label>Дата созания</label>
+              <div class="modal-column_text">{{ dataReqsImport[0].date }}</div>
+            </div>
+
+            <div class="modal-column">
+              <label>Склад</label>
+              <div class="modal-column_text">{{ dataReqsImport[0].stock }}</div>
+            </div>
+          </div>
+
+          <div class="table">
+            <div class="table__row">
+              <div class="table__el">Артикул</div>
+              <div class="table__el">Наименование</div>
+              <div class="table__el">Количество</div>
+              <div class="table__el">Цена за единицу, ₽</div>
+            </div>
+
+            <div class="table__row" v-for="good in impReqGoodInf" :key="good">
+              <div class="table__el">
+                {{ good.ID }}
+              </div>
+              <div class="table__el">
+                {{ good.name }}
+              </div>
+              <div class="table__el">
+                {{ good.quantity }}
+              </div>
+              <div class="table__el">
+                {{ good.cost }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="warning" v-if="typeModal == 'delGoods'">
         Вы действитетельно хотите удалить товар?
       </div>
@@ -231,6 +292,14 @@
           @click="closeModal"
         >
           Отменить
+        </button>
+
+        <button
+          class="cancel-button"
+          v-if="typeModal == 'openImpReq'"
+          @click="declineReqImport(dataReqsImport[0].ID)"
+        >
+          Отклонить
         </button>
 
         <button
@@ -302,6 +371,14 @@ export default {
       type: Array,
       dafault: [],
     },
+    dataReqsImport: {
+      type: Array,
+      dafault: [],
+    },
+    impReqGoodInf: {
+      type: Array,
+      dafault: [],
+    },
   },
   methods: {
     closeModal() {
@@ -331,6 +408,10 @@ export default {
         }
         this.reqGoods[index].isInpGoodFocused = false;
       }, 300);
+    },
+    declineReqImport(ID) {
+      // console.log(ID);
+      this.closeModal();
     },
     confirmModal() {
       switch (this.typeModal) {
@@ -575,7 +656,10 @@ export default {
           }
         });
         return this.isValidNameStock == "" && isValidGoodsAndQual;
-      } else if (this.typeModal == "delGoods") {
+      } else if (
+        this.typeModal == "delGoods" ||
+        this.typeModal == "openImpReq"
+      ) {
         return true;
       } else {
         return (
@@ -627,6 +711,16 @@ export default {
     padding: 2.5vw;
     border-radius: 5px;
     position: relative;
+
+    .table {
+      &__row {
+        display: flex;
+        justify-content: start;
+      }
+      &__el {
+        width: 15vw;
+      }
+    }
 
     .scroll {
       overflow: scroll;
@@ -732,6 +826,27 @@ export default {
       gap: 0.4vw;
       margin-bottom: 1vw;
       position: relative;
+
+      .modal-row {
+        display: flex;
+        padding-right: 5vw;
+        justify-content: space-between;
+        gap: 2vw;
+        margin-bottom: 2vw;
+
+        .modal-column_text {
+          font-size: 1.2vw;
+          font-weight: bold;
+        }
+        label {
+          font-size: 1.1vw;
+        }
+
+        &.last {
+          gap: 14vw;
+          justify-content: start;
+        }
+      }
 
       &.last {
         width: calc(50% - 1vw);
