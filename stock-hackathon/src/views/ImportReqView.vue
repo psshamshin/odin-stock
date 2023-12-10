@@ -2,7 +2,7 @@
   <div class="import_req-wrapper">
     <Table
       :headers="headers"
-      :data="data"
+      :data="dataReqsImport"
       @openModal="openModal"
       :typeTable="typeTable"
     />
@@ -18,33 +18,22 @@ export default {
   },
   data() {
     return {
-      data: [
-        {
-          id: "ID-example-854",
-          status: "Создана",
-          author: "ИП Иванов Иван Иванович",
-          stock: "Склад",
-          datetime: "02.12.2023 12:45:34",
-          cost: "1000",
-        },
-        {
-          id: "ID-example-855",
-          status: "Создана",
-          author: "ИП Иванов Иван Иванович",
-          stock: "Склад",
-          datetime: "02.12.2023 12:45:34",
-          cost: "1000",
-        },
-      ],
       typeTable: "simple",
-      headers: ["ID", "Статус", "Автор", "Склад", "Дата создания", "Сумма, ₽ "],
+      headers: ["ID", "Статус", "Автор", "Склад", "Дата создания", "Сумма, ₽"],
     };
+  },
+  props: {
+    dataReqsImport: {
+      type: Array,
+      required: true,
+    },
   },
   methods: {
     openModal(args) {
       this.$emit("openModal", args);
     },
   },
+
   created() {
     this.$emit("onCreateImportReq");
   },

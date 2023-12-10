@@ -6,7 +6,7 @@
     </div>
 
     <div class="btns-wrapper">
-      <router-link class="button" to="/">
+      <router-link class="button" to="/import">
         <span class="material-icons"> file_upload </span>
         <span class="text">Заявки на отгрузку</span>
       </router-link>

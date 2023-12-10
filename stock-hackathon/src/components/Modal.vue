@@ -109,6 +109,19 @@
           <div class="error-block">
             <p v-if="isValidSize" class="error">{{ isValidSize }}</p>
           </div>
+
+          <input
+            type="text"
+            placeholder="Количество"
+            v-model="quantityGood"
+            @input="validateNum(quantityGood)"
+            :class="isValidQuantityGood ? 'error' : ''"
+          />
+          <div class="error-block">
+            <p v-if="isValidQuantityGood" class="error">
+              {{ isValidQuantityGood }}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -232,14 +245,14 @@
             <div class="modal-column">
               <label>Продавец</label>
               <div class="modal-column_text">
-                {{ dataReqsImport[0].author }}
+                {{ filterdDataReqsImport[0].author }}
               </div>
             </div>
 
             <div class="modal-column">
               <label>Статус</label>
               <div class="modal-column_text">
-                {{ dataReqsImport[0].status }}
+                {{ filterdDataReqsImport[0].status }}
               </div>
             </div>
           </div>
@@ -247,24 +260,32 @@
           <div class="modal-row last">
             <div class="modal-column">
               <label>Дата созания</label>
-              <div class="modal-column_text">{{ dataReqsImport[0].date }}</div>
+              <div class="modal-column_text">
+                {{ filterdDataReqsImport[0].date }}
+              </div>
             </div>
 
             <div class="modal-column">
               <label>Склад</label>
-              <div class="modal-column_text">{{ dataReqsImport[0].stock }}</div>
+              <div class="modal-column_text">
+                {{ filterdDataReqsImport[0].stock }}
+              </div>
             </div>
           </div>
 
           <div class="table">
-            <div class="table__row">
+            <div class="table__row header">
               <div class="table__el">Артикул</div>
               <div class="table__el">Наименование</div>
               <div class="table__el">Количество</div>
               <div class="table__el">Цена за единицу, ₽</div>
             </div>
 
-            <div class="table__row" v-for="good in impReqGoodInf" :key="good">
+            <div
+              class="table__row"
+              v-for="good in filterdDataReqsImport.goods"
+              :key="good"
+            >
               <div class="table__el">
                 {{ good.ID }}
               </div>
@@ -379,6 +400,10 @@ export default {
       type: Array,
       dafault: [],
     },
+    filterdDataReqsImport: {
+      type: Array,
+      required: true,
+    },
   },
   methods: {
     closeModal() {
@@ -419,6 +444,7 @@ export default {
           this.$emit("confirmModal", {
             method: "del",
           });
+          break;
         case "editGoods":
           this.$emit("confirmModal", {
             method: "edit",
@@ -431,8 +457,10 @@ export default {
               lenGood: this.lenGood,
               heightGood: this.heightGood,
               widthGood: this.widthGood,
+              quantityGood: this.quantityGood,
             },
           });
+          break;
         case "addGoods":
           this.$emit("confirmModal", {
             method: "add",
@@ -445,8 +473,50 @@ export default {
               lenGood: this.lenGood,
               heightGood: this.heightGood,
               widthGood: this.widthGood,
+              quantityGood: this.quantityGood,
             },
           });
+          break;
+        case "addImportReq":
+          let currentDate = new Date();
+
+          let day = String(currentDate.getDate()).padStart(2, "0");
+          let month = String(currentDate.getMonth() + 1).padStart(2, "0");
+          let year = currentDate.getFullYear();
+
+          let hours = String(currentDate.getHours()).padStart(2, "0");
+          let minutes = String(currentDate.getMinutes()).padStart(2, "0");
+          let seconds = String(currentDate.getSeconds()).padStart(2, "0");
+
+          let formattedDate = `${day}:${month}:${year} ${hours}:${minutes}:${seconds}`;
+          // console.log(formattedDate);
+
+          this.$emit("confirmModal", {
+            method: "addReq",
+            data: {
+              // ID: "ID-example-854",
+              status: "Создана",
+              author: "ИП Иванов Иван Иванович",
+              stock: this.nameStock,
+              date: formattedDate,
+              sum: "1000",
+            },
+          });
+          break;
+        case "openImpReq":
+          console.log("ffffffff");
+          this.$emit("confirmModal", {
+            method: "openReq",
+            data: {
+              // ID: "ID-example-854",
+              status: "Создана",
+              author: "ИП Иванов Иван Иванович",
+              stock: this.nameStock,
+              date: formattedDate,
+              sum: "1000",
+            },
+          });
+          break;
       }
       this.closeModal();
     },
@@ -616,9 +686,6 @@ export default {
     isValidNameStock() {
       return this.validateStrSrchStock(this.nameStock);
     },
-    // isValidNameGood() {
-    //   return this.validateStrSrchGood(this.nameGood);
-    // },
     isValidQuantityGood() {
       return this.validateNum(this.quantityGood);
     },
@@ -646,7 +713,8 @@ export default {
           this.isValidDesc == "" &&
           this.isValidLen == "" &&
           this.isValidHeight == "" &&
-          this.isValidWidth == ""
+          this.isValidWidth == "" &&
+          this.isValidCost == ""
         );
       } else if (this.typeModal == "addImportReq") {
         var isValidGoodsAndQual = true;
@@ -716,12 +784,15 @@ export default {
       &__row {
         display: flex;
         justify-content: start;
+        &.header {
+          font-weight: bold;
+          margin-bottom: 1vw;
+        }
       }
       &__el {
         width: 15vw;
       }
     }
-
     .scroll {
       overflow: scroll;
       height: 14vw;

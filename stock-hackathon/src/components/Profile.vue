@@ -2,7 +2,7 @@
   <div class="profile-wrapper">
     <div class="profile">
       <div class="profile-logo">
-        <img src="../assets/user_photo.svg" alt="Exit" />
+        <!-- <img src="../assets/user_photo.svg" alt="Exit" /> -->
       </div>
       <div class="profile-info">
         <div class="profile-info__name">{{ name }}</div>

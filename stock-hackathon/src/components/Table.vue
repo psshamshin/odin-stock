@@ -12,6 +12,13 @@
         </div>
         <div class="btns-block">
           <button
+            class="del-btn"
+            v-if="typeTable != 'simple'"
+            @click="openModal('openImpReq_' + el.ID)"
+          >
+            <img src="../assets/barcode_icon.svg" alt="del" />
+          </button>
+          <button
             class="edit-btn"
             v-if="typeTable != 'simple'"
             @click="openModal('editGoods_' + el.id)"
@@ -29,7 +36,7 @@
           <button
             class="del-btn"
             v-if="typeTable == 'simple'"
-            @click="openModal('openImpReq_' + el.id)"
+            @click="openModal('openImpReq_' + el.ID)"
           >
             <img src="../assets/open_icon.svg" alt="del" />
           </button>
